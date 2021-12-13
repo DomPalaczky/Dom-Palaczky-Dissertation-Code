@@ -4,10 +4,15 @@
 ## Jupyter Notebook Examples:
 
 Aggregate Visuals - Distrubution based visuals post clustering
+
 Kmeans Implementation - How Kmeans has been implemented in this script
+
 SOM implementation - How SOM has been implemented in this script
+
 Script - An example of the script running
+
 Time Visuals - Short time series analysis of clusters
+
 Validation - Examlples of how the process has been validated
 
 ## Requirements
