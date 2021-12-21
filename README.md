@@ -17,4 +17,18 @@ Validation - Examlples of how the process has been validated
 
 ## Requirements
 dtreeviz (https://github.com/parrt/dtreeviz)
+
 seaborn (https://seaborn.pydata.org/)
+
+MINISOM (https://github.com/JustGlowing/minisom)
+
+## Additional Material
+Data Genaration - Contains the code used to generate the artifical dataset, data generated lies within fakeData
+
+Tracing - Contains the code used to calcualte the traceabiloity score
+
+SOM - visuals of the SOM algorithm
+
+Kmeans - Visuals of the Kmeans algorihtm
+
+Vis - visuals for the explaianable clustering method
