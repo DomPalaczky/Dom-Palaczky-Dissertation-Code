@@ -7,12 +7,13 @@ import pandas as pd
 import numpy as np
 import os
 import time
+from sklearn.preprocessing import MinMaxScaler 
 
 def runClusterAnalysis(data, saveimagepath, 
                        labelcolumn = None, labelnames = None, 
                        timeseriesdata = None, mergetimeserieson = None, timeseriesdates= None, timeseriesamounts = None,
                        savedatapath=None, savemodelpath = None, 
-                       algorithm = 'SOM', validationthreshold = 0.95, maxclusters = 10):
+                       algorithm = 'SOM', validationthreshold = 0.95, maxclusters = 10, SOMParams = None):
     #create save directories if dont exist
     try:
         os.mkdir(saveimagepath)
@@ -40,6 +41,7 @@ def runClusterAnalysis(data, saveimagepath,
         columnnames.remove(mergetimeserieson)
         
     X = data[columnnames].to_numpy()
+    X = MinMaxScaler().fit_transform(X)
     
     t1 = time.time()
     if algorithm.lower() == 'kmeans': #run kmeans algorithm
@@ -62,7 +64,7 @@ def runClusterAnalysis(data, saveimagepath,
         
     elif algorithm.lower() == 'som': #run SOM algorithm
         SOM = SelfOrganisingMap() 
-        results, best, som = SOM.train_som(X) #caluclate best SOM usin gridsearch, then visualise
+        results, best, som = SOM.train_som(X, params = SOMParams) #caluclate best SOM usin gridsearch, then visualise
         SOM.makeDistanceMap(som, saveimagepath)
         
         if labels is not None:

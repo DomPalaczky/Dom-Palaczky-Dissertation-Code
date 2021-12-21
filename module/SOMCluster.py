@@ -10,24 +10,26 @@ import matplotlib.gridspec as gridspec
 class SelfOrganisingMap:
     
     def somTrain(self, X, param):
+        #given param dict train a SOM
         som = MiniSom(x = param[0], y = param[0], sigma = param[1], learning_rate = param[2], neighborhood_function = param[4], input_len = X.shape[1], random_seed = 1)
         som.train(X, num_iteration = param[3])
 
         return som.quantization_error(X), som.topographic_error(X)
     
     def train_som(self, X, params = None, returnBestTrained=True):
+        #perform a gird search of given parameters, then returns lowest error
         if params is None:
             params = {'xy': [5,8,10,12,15,20,25],
                       'sigma' : [0.5,0.75,1,2,3,4],
                       'learning_rate' : [0.2,0.5,0.75,1,2,5],
-                      'iterations' : [1000],
+                      'iterations' : [10000],
                       'neighborhood_function' : ['gaussian']}
 
-        paramsCombined = list(it.product(*(params[p] for p in params)))
+        paramsCombined = list(it.product(*(params[p] for p in params))) # create a combinaation of all parameters
 
-        results = {p:self.somTrain(X, p) for p in paramsCombined}
+        results = {p:self.somTrain(X, p) for p in paramsCombined} # dictionary of results of all params
 
-        best = list(sorted(results.items(), key=lambda item: item[1]))[0][0]
+        best = list(sorted(results.items(), key=lambda item: item[1]))[0][0] #lowest quat error
         if returnBestTrained == True:
             som = MiniSom(x = best[0], y = best[0], sigma = best[1], learning_rate = best[2], neighborhood_function = best[4], input_len = X.shape[1], random_seed = 1)
             som.train(X, num_iteration = best[3])
@@ -48,6 +50,7 @@ class SelfOrganisingMap:
             plt.show()
     
     def makeLabelledSOM(self, som, X, label_names, labels, best, title, path, show = False):
+        #creates a visual of the SOM with piecharts for neurons of proportions within, taken from minisom documentation 
         
         labels_map = som.labels_map(X, [label_names[t] for t in labels])
 
@@ -69,6 +72,7 @@ class SelfOrganisingMap:
         return plt
     
     def makeFrequencyMap(self, som, X, show=False):
+        #taken from minisom documentation, shows neuron activation freqs
         plt.figure()
         frequencies = som.activation_response(X)
         plt.pcolor(frequencies.T, cmap='Blues') 
@@ -81,6 +85,7 @@ class SelfOrganisingMap:
         return plt
     
     def return_unique_winners(self, som, X, return_cat = False, return_big_neurons = False):
+        #returns a list of unique winning neurons, not all neurons win datapoints
         winners = [list(som.winner(x)) for x in X]
         Xlen = len(X)
         unique_winners = [[w[0],w[1]] for w in list(np.unique(winners, axis = 0, return_counts=True))]
@@ -100,6 +105,7 @@ class SelfOrganisingMap:
             return unique_winners
         
     def progressiveStatistical(self, big_neurons, data):
+        #reduces big neurons into smaller
         n = big_neurons[0]
 
         datanew = data[data['cluster'] == n]
@@ -135,6 +141,7 @@ class SelfOrganisingMap:
         return labels
     
     def SOMKmeansWinners(self, som, X, labels):
+        #creates Kmeans clusters based on SOM labelling
         winners = [list(som.winner(x)) for x in X]
 
         kmeanslabels = [labels[w[0],w[1]] for w in winners]

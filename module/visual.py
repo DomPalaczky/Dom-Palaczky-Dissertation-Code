@@ -7,6 +7,7 @@ from scipy import stats
 from sklearn.preprocessing import MinMaxScaler 
 
 def averageBarchart(X, labels, columnnames, path, show = False):
+    #plots a barchart of average values per feature per cluster
     try:
         os.mkdir(path + '/aggregation')
     except:
@@ -14,14 +15,14 @@ def averageBarchart(X, labels, columnnames, path, show = False):
     
     x = MinMaxScaler().fit_transform(X) #normalise
     
-    gap = .8 /( max(labels)+1)
-    i=-((max(labels)+1)/2)
+    gap = .8 /( max(labels)+1) #calc gap betweeen clusters
+    i=-((max(labels)+1)/2) # x axis values
 
     idx = np.asarray([i for i in range(len(columnnames))])
 
     fig, ax = plt.subplots(figsize=(15, 5))
     
-    #calulcate mean per column name
+    #calulcate mean per column name, and plot bar
     
     
     for l in range(max(labels)+1):
@@ -36,6 +37,7 @@ def averageBarchart(X, labels, columnnames, path, show = False):
                label = l)
         i+=1
         
+    #format graph
     ax.set_xticks(idx)
     ax.set_xticklabels(list(columnnames))
     ax.legend(loc='best')
@@ -50,6 +52,7 @@ def averageBarchart(X, labels, columnnames, path, show = False):
     plt.clf()
     
 def boxplot(x, y, columns,path, normalise = True, show = False):
+    #plot a boxplot for each feature based on 
     try:
         os.mkdir('./vis/aggregation')
     except:
@@ -86,6 +89,7 @@ def boxplot(x, y, columns,path, normalise = True, show = False):
         plt.clf()
 
 def pltNormalDistwithMeans(clustersummarydf, X, path, show=False):
+    #plots a graph of a normal disturbtuin, with markers for where each cluster lies
     try:
         os.mkdir(path + '/aggregation/normalDistrubution')
     except:
@@ -120,6 +124,7 @@ def pltNormalDistwithMeans(clustersummarydf, X, path, show=False):
         i += 1
         
 def pltHistwithMeans(clustersummarydf, X, path, show = False):
+    #plots distrubutions of features, with markers for means
     try:
         os.mkdir(path + '/aggregation/histogramDistrubutionwithMeans')
     except:
@@ -127,11 +132,12 @@ def pltHistwithMeans(clustersummarydf, X, path, show = False):
     i = 0
     for c in clustersummarydf.columns:
         x = np.linspace(min(X[:,i]),max(X[:,i]), 100)
-        gaus = stats.gaussian_kde(X[:,i])
+        gaus = stats.gaussian_kde(X[:,i]) #approciamte the distrubtion
         plt.plot(x,gaus(x))
         
+        #generate values for borders
         y1 = [min(gaus(x)),max(gaus(x))]
-        x1 = [np.percentile(X[:,i],68),np.percentile(X[:,i],68)]
+        x1 = [np.percentile(X[:,i],68),np.percentile(X[:,i],68)] 
         plt.plot(x1,y1,alpha=0.15,c='r')
         x1 = [np.percentile(X[:,i],32),np.percentile(X[:,i],32)]
         plt.plot(x1,y1,alpha=0.15,c='r')
@@ -177,8 +183,9 @@ def pltHistWithCluster(X, labels,path, show = False):
         i += 1   
         
 def radarClus(X, labels, columnnames, path, show = False):
+    #craetes a radar plot
     
-    labelloc = np.linspace(start=0, stop=2 * np.pi, num=len(columnnames))
+    labelloc = np.linspace(start=0, stop=2 * np.pi, num=len(columnnames)) # create a section for each label
 
     x = MinMaxScaler().fit_transform(X)    
     
@@ -199,6 +206,7 @@ def radarClus(X, labels, columnnames, path, show = False):
     plt.clf() 
 
 def parallelClus(X, labels, columnnames, path, show = False):
+    #creates a parallel plot with shadows
     
     x = MinMaxScaler().fit_transform(X)
 
@@ -219,6 +227,9 @@ def parallelClus(X, labels, columnnames, path, show = False):
     plt.legend()
     plt.grid(axis = 'x')
     plt.xticks(np.arange(0,len(x[1])),labels = columnnames)
+    
+    plt.setp(columnnames, rotation=45, horizontalalignment='right', pad_inches = .5, bbox_inches = 'tight')
+    
     plt.savefig(path + '/aggregation/parallel.png', transparent=False, facecolor='white')
     
     if show == True:

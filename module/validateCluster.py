@@ -111,7 +111,8 @@ def plotFeatureImportanceByClass(columnnames, featureImportance, X, labels, clas
     for i in range(max(labels)+1):
         idx =  np.where(np.array(labels) == i)[0]
         heights = []
-        idx = np.random.choice( idx.ravel(),100,replace=False) # choose 100 values
+        if len(idx) > 100:
+            idx = np.random.choice( idx.ravel(),100,replace=False) # choose 100 values
         x = X[idx]
         for j in x:
             

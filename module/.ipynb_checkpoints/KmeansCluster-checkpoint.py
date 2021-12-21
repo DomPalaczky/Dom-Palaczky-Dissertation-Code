@@ -39,6 +39,7 @@ class kmeansCluster:
         return ax
         
     def findKMeansClusters(self, x, path, minClusters=2, maxClusters=50):
+        #this runs through up to maxClusters to identify the optimal number of clusters according to the kneedle technique
         
         clusters = []
         #scores = []
@@ -67,8 +68,9 @@ class kmeansCluster:
         return inertias, kneedle
     
     def labelKMeans(self,x, maxclusters = 10, clustersNum = 5, useKneedle = True):
+        #this labels a dataset given k clusters, requires a knee 
         
-        if maxclusters < self.knee:
+        if maxclusters < self.knee: #if knee is over mac clusters, use max clusters
             useKneedle = False
             clustersNum = maxclusters
             print('Warning: too many kneedle clusters, reverting to max clusters')

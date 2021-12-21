@@ -20,7 +20,7 @@ class SelfOrganisingMap:
             params = {'xy': [5,8,10,12,15,20,25],
                       'sigma' : [0.5,0.75,1,2,3,4],
                       'learning_rate' : [0.2,0.5,0.75,1,2,5],
-                      'iterations' : [1000],
+                      'iterations' : [10000],
                       'neighborhood_function' : ['gaussian']}
 
         paramsCombined = list(it.product(*(params[p] for p in params)))
